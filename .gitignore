@@ -1,0 +1,10 @@
+/apache-tomcat*/**/*
+!/apache-tomcat*/conf
+!/apache-tomcat*/conf/server.xml
+!/apache-tomcat*/conf/certs
+!/apache-tomcat*/conf/certs/*.jks
+.idea
+target
+*.zip
+Thumbs.db*
+.DS_Store

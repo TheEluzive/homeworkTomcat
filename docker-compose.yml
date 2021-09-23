@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   webapp:
-    image: ghcr.io/coursar/web-app
+    image: ghcr.io/theeluzive/homeworktomcat
     ports:
       - "8080:8080"
       - "8443:8433"

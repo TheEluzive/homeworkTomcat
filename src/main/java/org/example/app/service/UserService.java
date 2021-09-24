@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,10 +32,15 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
   @Override
   public Authentication authenticate(Authentication authentication) {
     final var token = (String) authentication.getPrincipal();
+    final var roles = new ArrayList<String>();
 
+
+    for (Long n: repository.getRoles(token)) {
+      roles.add(Roles.getById(n));
+    }
     return repository.findByToken(token)
         // TODO: add user roles
-        .map(o -> new TokenAuthentication(o, null, List.of(), true))
+        .map(o -> new TokenAuthentication(o, null, roles, true))
         .orElseThrow(AuthenticationException::new);
   }
 

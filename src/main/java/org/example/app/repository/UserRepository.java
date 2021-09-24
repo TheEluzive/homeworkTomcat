@@ -9,7 +9,9 @@ import org.example.jdbc.RowMapper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @RequiredArgsConstructor
 public class UserRepository {
@@ -19,6 +21,9 @@ public class UserRepository {
       resultSet.getLong("id"),
       resultSet.getString("username")
   );
+
+  private final RowMapper<Long> rowMapperRoles = resultSet -> resultSet.getLong("role");
+
   private final RowMapper<UserWithPassword> rowMapperWithPassword = resultSet -> new UserWithPassword(
       resultSet.getLong("id"),
       resultSet.getString("username"),
@@ -77,6 +82,22 @@ public class UserRepository {
             """,
         rowMapper,
         token
+    );
+  }
+
+  public List<Long> getRoles(String token){
+
+    // language=PostgreSQL
+    return jdbcTemplate.queryAll(
+            """
+                SELECT ur."role" FROM tokens t
+                JOIN users u ON t."userId" = u.id
+                JOIN user_roles ur ON ur."user" = u.id
+                WHERE t.token = ?
+                
+                """,
+            rowMapperRoles,
+            token
     );
   }
 

@@ -13,6 +13,7 @@ public class CardService {
   private final CardRepository cardRepository;
 
   public List<Card> getAllByOwnerId(long ownerId) {
+
     return cardRepository.getAllByOwnerId(ownerId);
   }
 

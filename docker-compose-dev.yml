@@ -10,4 +10,4 @@ services:
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=pass
     volumes:
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - E:\HW\homeworkTomcat\docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro

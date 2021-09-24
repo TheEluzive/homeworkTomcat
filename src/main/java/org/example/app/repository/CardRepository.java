@@ -31,7 +31,7 @@ public class CardRepository {
   public Optional<Card> getById(long cardId) {
     // language=PostgreSQL
     return  jdbcTemplate.queryOne(
-            "SELECT id, number, balance FROM cards WHERE \"id\" = ? AND active = TRUE",
+            "SELECT id, number, balance, \"ownerId\" FROM cards WHERE \"id\" = ? AND active = TRUE",
             cardRowMapper,
             cardId
     );

@@ -17,8 +17,9 @@ public class CardService {
     return cardRepository.getAllByOwnerId(ownerId);
   }
 
-  public Card getByID(Long cardId){
+  public Card getByID(Long cardId, Long userId){
     Optional<Card> card= cardRepository.getById(cardId);
+
     return card.orElse(null);
 
   }

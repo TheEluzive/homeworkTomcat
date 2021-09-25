@@ -1,11 +1,13 @@
 package org.example.app.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.example.app.domain.User;
 import org.example.app.domain.UserWithPassword;
 import org.example.app.entity.UserEntity;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
+import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -117,10 +119,13 @@ public class UserRepository {
     public Optional<String> getRecoveryToken(String login) {
 
         RowMapper<Long> rowMapper = resultSet -> resultSet.getLong("id");
+        final String token = new Base64StringKeyGenerator(32).generateKey().substring(0, 6);
+
         // language=PostgreSQL
         final var tokenId = jdbcTemplate.queryOne(
-                "INSERT INTO token_recovery(token,login) VALUES (gen_random_uuid(), ?) returning id",
+                "INSERT INTO token_recovery(token,login) VALUES (?, ?) returning id",
                 rowMapper,
+                token,
                 login
         );
 

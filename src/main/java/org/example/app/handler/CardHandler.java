@@ -81,7 +81,11 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     public void transaction(HttpServletRequest req, HttpServletResponse resp)  {
         try{
             final var requestDto = gson.fromJson(req.getReader(), TransactionDto.class);
-            isLegalAccess(requestDto.getFromCardId(), req);
+
+            if (requestDto.getValue() < 0)
+                throw new RuntimeException();
+
+            isLegalTransaction(requestDto.getFromCardId(), req);
             final var data = service.transaction(requestDto);
             //return updated card from that was transaction
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
@@ -98,6 +102,16 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
         final var authorizedUserId = UserHelper.getUser(req).getId();
         final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
         if (ownerId != authorizedUserId && !isAdmin)
+            throw new IllegalAccessCardsException("User with " + authorizedUserId +
+                    "cant access to card " + cardId);
+        return true;
+    }
+
+    public boolean isLegalTransaction(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
+        final var ownerId = service.getOwnerID(cardId);
+        final var authorizedUserId = UserHelper.getUser(req).getId();
+        final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
+        if (ownerId != authorizedUserId)
             throw new IllegalAccessCardsException("User with " + authorizedUserId +
                     "cant access to card " + cardId);
         return true;

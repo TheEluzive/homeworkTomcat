@@ -2,8 +2,8 @@
 
 ![](pic/README.png)
 
-Добавлять надо URL: `CATALINA_OPTS=-DJDBC_DATABASE_URL="jdbc:postgresql://localhost:5432/db?user=app&password=pass"` (он сам автоматически разобьётся на `Name` и `Value`)
+Добавлять надо URL: `CATALINA_OPTS=-DJDBC_DATABASE_URL="jdbc:postgresql://localhost:5555/db?user=app&password=pass"` (он сам автоматически разобьётся на `Name` и `Value`)
 
 В Docker Compose передавать:
 
-`CATALINA_OPTS=-DJDBC_DATABASE_URL="jdbc:postgresql://db:5432/db?user=app&password=pass"`
+`CATALINA_OPTS=-DJDBC_DATABASE_URL="jdbc:postgresql://db:5555/db?user=app&password=pass"`

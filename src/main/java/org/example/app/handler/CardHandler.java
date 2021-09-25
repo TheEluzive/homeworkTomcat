@@ -5,17 +5,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.example.app.domain.Card;
-import org.example.app.domain.User;
 import org.example.app.exception.IllegalAccessCardsException;
 import org.example.app.service.CardService;
 import org.example.app.util.UserHelper;
 import org.example.framework.attribute.RequestAttributes;
-import org.example.framework.security.Authentication;
 import org.example.framework.security.Roles;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 
 @Log
@@ -25,42 +21,73 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     private final Gson gson;
 
     public void getAll(HttpServletRequest req, HttpServletResponse resp) {
-        int a = 10;
         try {
-            // cards.getAll?ownerId=1
-            final var user = UserHelper.getUser(req);
-            final var data = service.getAllByOwnerId(user.getId());
+            final var user = UserHelper.getUser(req);//тянется из авторизации
+            final var data = service.getAllByOwnerId(user.getId()); //проверка не нужна в таком случае
             resp.setHeader("Content-Type", "application/json");
             resp.getWriter().write(gson.toJson(data));
+
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
+
         }
     }
 
     public void getById(HttpServletRequest req, HttpServletResponse resp) {
-        final var cardId = Long.parseLong(((Matcher) req.getAttribute(RequestAttributes.PATH_MATCHER_ATTR)).group("cardId"));
-
-        final var userId = UserHelper.getUser(req).getId();
-        final var data = service.getByID(cardId, userId);
-
-        resp.setHeader("Content-Type", "application/json");
         try {
-            //TODO: data.getID() - get CARD ID, NOT USER ID FIX!!!
-            if (data.getId() != userId && !UserHelper.isRoles(req, Roles.ROLE_ADMIN))
-                throw new IllegalAccessCardsException("User with " + userId + "cant access to card " + cardId);
-            resp.getWriter().write(gson.toJson(data));
-        } catch (IllegalAccessCardsException illegalAccessCardsException) {
-            illegalAccessCardsException.printStackTrace();
-        } catch (Exception e) { //TODO: fix me???
-            e.printStackTrace();
-        }
+            final var cardId = parseLongRequest(req, "cardId");
+            isLegalAccess(cardId, req);
 
-        log.log(Level.INFO, "getById");
+            final var data = service.getByID(cardId);
+            resp.setHeader("Content-Type", "application/json");
+            resp.getWriter().write(gson.toJson(data));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
+
     public void order(HttpServletRequest req, HttpServletResponse resp) {
+        
+
+
     }
 
     public void blockById(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            final var cardId = parseLongRequest(req, "cardId");
+            isLegalAccess(cardId, req);
+            final var result = service.blockById(cardId);
+            if (result < 1)
+                throw new RuntimeException();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
+
+    public boolean isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
+        final var ownerId = service.getOwnerID(cardId);
+        final var authorizedUserId = UserHelper.getUser(req).getId();
+        final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
+        if (ownerId != authorizedUserId && !isAdmin)
+            throw new IllegalAccessCardsException("User with " + authorizedUserId +
+                    "cant access to card " + cardId);
+        return true;
+    }
+
+    public Long parseLongRequest(HttpServletRequest req, String group) {
+        try {
+            return Long.parseLong(((Matcher) req.getAttribute(RequestAttributes.PATH_MATCHER_ATTR)).group(group));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L;
+        }
+    }
+
+
 }

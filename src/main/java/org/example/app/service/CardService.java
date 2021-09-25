@@ -17,10 +17,18 @@ public class CardService {
     return cardRepository.getAllByOwnerId(ownerId);
   }
 
-  public Card getByID(Long cardId, Long userId){
+  public Card getByID(Long cardId){
     Optional<Card> card= cardRepository.getById(cardId);
-
     return card.orElse(null);
 
+  }
+
+  public long getOwnerID(Long cardId){
+    Optional<Integer> ownerId = cardRepository.getOwnerID(cardId);
+    return ownerId.orElse(-1);
+  }
+
+  public int blockById(Long cardId){
+    return cardRepository.blockById(cardId);
   }
 }

@@ -35,9 +35,24 @@ public class CardRepository {
             cardRowMapper,
             cardId
     );
+  }
 
+  public Optional<Integer> getOwnerID(long cardid){
+    RowMapper<Integer> rowMapper =  resultSet -> resultSet.getInt("ownerId");
+    // language=PostgreSQL
 
+    return jdbcTemplate.queryOne(
+            "SELECT \"ownerId\" FROM cards WHERE  \"id\" = ? AND active = TRUE",
+    rowMapper,
+    cardid
+    );
+  }
 
-
+  public int blockById(Long cardId){
+    // language=PostgreSQL
+    return jdbcTemplate.update(
+            "UPDATE cards set active = FALSE where \"id\" = ?",
+            cardId
+    );
   }
 }

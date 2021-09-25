@@ -18,7 +18,8 @@ public class UserHelper {
   }
 
   public static boolean isRoles(HttpServletRequest req, String stringRole){
-    ArrayList<String> listRoles = (ArrayList<String>) ((Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR)).getAuthorities();
+    ArrayList<String> listRoles = (ArrayList<String>)
+            ((Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR)).getAuthorities();
     for (String roles: listRoles
          ) {
           if (roles.equals(stringRole) )

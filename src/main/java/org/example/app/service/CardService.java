@@ -2,9 +2,9 @@ package org.example.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.Card;
+import org.example.app.dto.TransactionDto;
 import org.example.app.repository.CardRepository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +40,10 @@ public class CardService {
       e.printStackTrace();
     }
     return Optional.empty();
+  }
+
+  public Optional<Card> transaction(TransactionDto transaction){
+    return cardRepository.transaction(transaction);
+
   }
 }

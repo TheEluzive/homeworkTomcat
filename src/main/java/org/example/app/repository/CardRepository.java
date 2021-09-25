@@ -2,6 +2,7 @@ package org.example.app.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.Card;
+import org.example.app.dto.TransactionDto;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 
@@ -70,4 +71,24 @@ public class CardRepository {
     );
     return optional.orElse(-1L);
   }
+
+  public Optional<Card> transaction(TransactionDto transaction){
+    //TODO: do transaction like sql-transaction too
+    //TODO: checks
+
+    // language=PostgreSQL
+    jdbcTemplate.update("UPDATE cards SET balance=balance - ? WHERE id = ?; ",
+            transaction.getValue(),
+            transaction.getFromCardId()
+    );
+
+    // language=PostgreSQL
+    jdbcTemplate.update("UPDATE cards SET balance=balance + ? WHERE id = ?; ",
+            transaction.getValue(),
+            transaction.getToCardId()
+    );
+    return getById(transaction.getFromCardId());
+  }
+
+
 }

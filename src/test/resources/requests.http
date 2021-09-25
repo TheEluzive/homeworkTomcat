@@ -53,3 +53,14 @@ Authorization: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjw
 
 
 ###
+
+POST https://server.local:8443/api//cards.transaction
+Authorization: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==
+Content-Type: application/json
+
+{
+  "fromCardId": 1,
+  "toCardId": 2,
+  "value": 55
+
+}

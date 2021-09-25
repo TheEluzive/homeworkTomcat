@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.example.app.dto.RegistrationRequestDto;
+import org.example.app.dto.TransactionDto;
 import org.example.app.exception.IllegalAccessCardsException;
 import org.example.app.service.CardService;
 import org.example.app.util.UserHelper;
@@ -74,6 +76,21 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public void transaction(HttpServletRequest req, HttpServletResponse resp)  {
+        try{
+            final var requestDto = gson.fromJson(req.getReader(), TransactionDto.class);
+            isLegalAccess(requestDto.getFromCardId(), req);
+            final var data = service.transaction(requestDto);
+            //return updated card from that was transaction
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
+            resp.getWriter().write(gson.toJson(data));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw  new RuntimeException(e.getMessage());
+        }
+
     }
 
     public boolean isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {

@@ -5,6 +5,7 @@ import org.example.app.domain.Card;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,8 @@ public class CardRepository {
     );
   }
 
-  public Optional<Integer> getOwnerID(long cardid){
-    RowMapper<Integer> rowMapper =  resultSet -> resultSet.getInt("ownerId");
+  public Optional<Long> getOwnerID(long cardid){
+    RowMapper<Long> rowMapper =  resultSet -> resultSet.getLong("ownerId");
     // language=PostgreSQL
 
     return jdbcTemplate.queryOne(
@@ -54,5 +55,19 @@ public class CardRepository {
             "UPDATE cards set active = FALSE where \"id\" = ?",
             cardId
     );
+  }
+
+  public long order(Long ownerId) throws SQLException {
+    String randomNumber = Long.toString(System.currentTimeMillis());
+    RowMapper<Long> rowMapper =  resultSet -> resultSet.getLong("id");
+
+    // language=PostgreSQL
+    Optional<Long> optional = jdbcTemplate.queryOne(
+            "INSERT INTO " +
+                    "cards(\"ownerId\", number, balance, active) " +
+                    "VALUES ( ? , ?, 0, true) returning id",
+            rowMapper, ownerId, randomNumber
+    );
+    return optional.orElse(-1L);
   }
 }

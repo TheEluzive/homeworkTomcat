@@ -24,11 +24,21 @@ public class CardService {
   }
 
   public long getOwnerID(Long cardId){
-    Optional<Integer> ownerId = cardRepository.getOwnerID(cardId);
-    return ownerId.orElse(-1);
+    Optional<Long> ownerId = cardRepository.getOwnerID(cardId);
+    return ownerId.orElse(-1L);
   }
 
   public int blockById(Long cardId){
     return cardRepository.blockById(cardId);
+  }
+
+  public Optional<Card> order(Long ownerId) {
+    try {
+      long cardId = cardRepository.order(ownerId);
+      return cardRepository.getById(cardId);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return Optional.empty();
   }
 }

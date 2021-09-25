@@ -19,12 +19,13 @@ import java.util.regex.Matcher;
 public class CardHandler { // Servlet -> Controller -> Service (domain) -> domain
     private final CardService service;
     private final Gson gson;
-
+    private final String CONTENT_TYPE = "Content-Type";
+    private final String CONTENT_TYPE_JSON = "application/json";
     public void getAll(HttpServletRequest req, HttpServletResponse resp) {
         try {
             final var user = UserHelper.getUser(req);//тянется из авторизации
             final var data = service.getAllByOwnerId(user.getId()); //проверка не нужна в таком случае
-            resp.setHeader("Content-Type", "application/json");
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(data));
 
         } catch (IOException e) {
@@ -40,7 +41,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             isLegalAccess(cardId, req);
 
             final var data = service.getByID(cardId);
-            resp.setHeader("Content-Type", "application/json");
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(data));
 
         } catch (Exception e) {
@@ -51,9 +52,14 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
 
     public void order(HttpServletRequest req, HttpServletResponse resp) {
-        
-
-
+        try{
+            final var card = service.order(UserHelper.getUser(req).getId());
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
+            resp.getWriter().write(gson.toJson(card));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void blockById(HttpServletRequest req, HttpServletResponse resp) {
@@ -88,6 +94,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             return -1L;
         }
     }
+
 
 
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,11 @@ public class JdbcTemplate {
     return execute(sql, args, PreparedStatement::executeUpdate);
   }
 
-
+//  public int insert(String sql, Object... args) throws SQLException {
+//    //is it needed method?
+//
+//    return  execute(sql, args, PreparedStatement::executeQuery);
+//  }
 
   private <T> T execute(String sql, Object[] args, Executor<T> executor) {
     try (

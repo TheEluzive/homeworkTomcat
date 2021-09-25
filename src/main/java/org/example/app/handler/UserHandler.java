@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.app.domain.User;
 import org.example.app.dto.LoginRequestDto;
+import org.example.app.dto.RecoveryPasswordFirstDto;
 import org.example.app.dto.RegistrationRequestDto;
 import org.example.app.service.CardService;
 import org.example.app.service.UserService;
+import org.example.app.util.UserHelper;
 import org.example.framework.attribute.RequestAttributes;
 
 import java.io.IOException;
@@ -44,5 +46,22 @@ public class UserHandler {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public void getTokenRecovery(HttpServletRequest req, HttpServletResponse resp){
+
+    try{
+      final var dto = gson.fromJson(req.getReader(), RecoveryPasswordFirstDto.class);
+
+      System.out.println("Recovery token =" +
+              service.getRecoveryToken(dto.getLogin())
+      );
+
+
+    }catch (Exception e){
+      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
+    }
+
   }
 }

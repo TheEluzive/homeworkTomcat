@@ -14,6 +14,14 @@ CREATE TABLE roles
     CONSTRAINT id PRIMARY KEY (id)
 );
 
+CREATE TABLE token_recovery
+(
+    login text,
+    token uuid,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    CONSTRAINT pkey_token_recovery_id PRIMARY KEY (id)
+);
+
 CREATE TABLE user_roles
 (
     "user" bigint,

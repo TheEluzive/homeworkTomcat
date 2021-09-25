@@ -12,6 +12,7 @@ import org.example.app.exception.RegistrationException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.jpa.JpaTransactionTemplate;
 import org.example.app.repository.UserRepository;
+import org.example.app.util.UserHelper;
 import org.example.framework.security.*;
 import org.example.framework.util.KeyValue;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,4 +104,8 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     final var saved = result.getValue();
     return new LoginResponseDto(saved.getId(), saved.getUsername(), token);
   }
+
+    public String getRecoveryToken(String login) {
+          return repository.getRecoveryToken(login).orElse("");
+    }
 }

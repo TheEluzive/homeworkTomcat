@@ -81,7 +81,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     public void transaction(HttpServletRequest req, HttpServletResponse resp)  {
         try{
             final var requestDto = gson.fromJson(req.getReader(), TransactionDto.class);
-
+            //TODO checks
             if (requestDto.getValue() < 0)
                 throw new RuntimeException();
 
@@ -96,6 +96,8 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
         }
 
     }
+
+
 
     public boolean isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
         final var ownerId = service.getOwnerID(cardId);

@@ -30,6 +30,10 @@ public class UserRepository {
             resultSet.getString("password")
     );
 
+    private final RowMapper<String> rowMapperToken = resultSet -> resultSet.getString("token");
+    private final RowMapper<Long> rowMapperId = resultSet -> resultSet.getLong("id");
+
+
     public Optional<User> getByUsername(String username) {
         // language=PostgreSQL
         return jdbcTemplate.queryOne("SELECT id, username FROM users WHERE username = ?", rowMapper, username);
@@ -116,22 +120,21 @@ public class UserRepository {
 
     public Optional<String> getRecoveryToken(String login) {
 
-        RowMapper<Long> rowMapper = resultSet -> resultSet.getLong("id");
+
         final String token = new Base64StringKeyGenerator(32).generateKey().substring(0, 6);
 
         // language=PostgreSQL
         final var tokenId = jdbcTemplate.queryOne(
                 "INSERT INTO token_recovery(token,login) VALUES (?, ?) returning id",
-                rowMapper,
+                rowMapperId,
                 token,
                 login
         );
 
-        RowMapper<String> stringRowMapper = resultSet -> resultSet.getString("token");
         //language=PostgreSQL
         return jdbcTemplate.queryOne(
                 "SELECT token from token_recovery where id = ?",
-                stringRowMapper,
+                rowMapperToken,
                 tokenId.orElse(-1L)
         );
 
@@ -149,14 +152,48 @@ public class UserRepository {
     }
 
     public Optional<String> refreshToken(String oldToken, String newToken){
-        RowMapper<String> rowMapper = resultSet -> resultSet.getString("token");
-        //language=PostgreSQL
+         //language=PostgreSQL
         return jdbcTemplate.queryOne(
                 "UPDATE tokens SET token = ? where token = ?",
-                rowMapper,
+                rowMapperToken,
                 newToken,
                 oldToken
         );
     }
 
+    public String getBasicAuthData(String stringBase64LogPass){
+        RowMapper<String> rowMapper = resultSet -> resultSet.getString("base64");
+        //language=PostgreSQL
+        jdbcTemplate.queryOne(
+                "SELECT base64 FROM base64data where base64 = ? ",
+                rowMapper,
+                stringBase64LogPass
+
+        );
+        return "";
+    }
+
+    public void saveBase64LogPas(String base64LogPass) {
+
+        //language=PostgreSQL
+        jdbcTemplate.update("INSERT INTO base64data(base64) values (?)",
+                base64LogPass);
+    }
+
+    public String getTokenByBase64(String base64LogPass){
+
+        //language=PostgreSQL
+        final var userId = jdbcTemplate.queryOne(
+          "SELECT id from base64data where base64 = ?",
+          rowMapperId,
+          base64LogPass
+        ).orElse(-1L);
+
+       //language=PostgreSQL
+        return jdbcTemplate.queryOne(
+          "SELECT token from tokens where \"userId\" = ?",
+                rowMapperToken,
+                userId
+        ).orElseThrow();
+    }
 }

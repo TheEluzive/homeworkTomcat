@@ -6,15 +6,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.app.util.UserHelper;
+import org.bouncycastle.jcajce.provider.asymmetric.rsa.DigestSignatureSpi;
+import org.bouncycastle.jcajce.provider.digest.MD5;
+import org.example.app.repository.UserRepository;
+import org.example.app.service.UserService;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.attribute.RequestAttributes;
+import org.example.framework.servlet.Handler;
+import org.example.jdbc.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.example.framework.security.*;
 
 import java.io.IOException;
+import java.util.Base64;
 
-public class TokenAuthenticationFilter extends HttpFilter {
+public class BasicAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
+
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -29,15 +37,20 @@ public class TokenAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        final var token = req.getHeader("Authorization");
-        if (token == null || token.contains("Basic ")) {//TODO maybe it is postman pattern
+        //пробовал в postman отправлять бейс64 запрос, там приходит "Basic 23jOJROKDFSLK$"DFS"
+        //поэтому принял это как образец
+
+        final var base64LogPass = req.getHeader("Authorization");
+        if (base64LogPass == null) {
             super.doFilter(req, res, chain);
             return;
         }
 
+        UserService provider = (UserService) this.provider;
+        var token = provider.getTokenFromBase64LogPass(base64LogPass);
 
         try {
-            final var authentication = provider.authenticate(new TokenAuthentication(token, null));
+            final var authentication = this.provider.authenticate(new TokenAuthentication(token, null));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);
         } catch (AuthenticationException e) {
             res.sendError(401);

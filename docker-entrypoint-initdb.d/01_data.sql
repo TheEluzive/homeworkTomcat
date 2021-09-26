@@ -7,6 +7,7 @@ ALTER SEQUENCE users_id_seq RESTART WITH 3;
 INSERT INTO tokens(token, "userId")
 VALUES ('6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==', 1);
 
+INSERT INTO base64data(base64) VALUES ('6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==');
 
 INSERT INTO cards(id, "ownerId", number, balance)
 VALUES (1, 1, '**** *888', 50000),

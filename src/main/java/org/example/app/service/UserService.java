@@ -62,7 +62,9 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var hash = passwordEncoder.encode(password);
         final var token = keyGenerator.generateKey();
         final var saved = repository.save(0, username, hash).orElseThrow(RegistrationException::new);
+        final var saveBase64LogPas = "Basic " + passwordEncoder.encode(username + password);
 
+        repository.saveBase64LogPas(saveBase64LogPas);
         repository.saveToken(saved.getId(), token);
         return new RegistrationResponseDto(saved.getId(), saved.getUsername(), token);
     }
@@ -110,6 +112,10 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     public String refreshToken(String oldToken){
         return repository.refreshToken(oldToken, keyGenerator.generateKey()).orElseThrow();
+    }
+
+    public String getTokenFromBase64LogPass(String base64LogPas){
+        return repository.getTokenByBase64(base64LogPas);
     }
 
 

@@ -85,4 +85,10 @@ Content-Type: application/json
   "newPassword": "newPass123"
 }
 
+### request set-cookie don`t understand how should work
+### so use postman to send cookies
+### token=6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==; Path=/; Expires=Mon, 26 Sep 2022 20:46:36 GMT;
+
 ###
+GET https://server.local:8443/api/cards.getById=1
+Authorization: Basic $argon2id$v=19$m=4096,t=3,p=1$bZmJV1G8SmPQrqTj/dYTsA$EVA8+h0BSpriIlEIl4DYqfbgyRX5mULE3adj77FMzDI

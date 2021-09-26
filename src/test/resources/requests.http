@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "newPass"
+  "password": "newPass123"
 }
 
 > {%
@@ -37,7 +37,7 @@ Authorization: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjw
 
 ###
 
-GET https://server.local:8443/api/cards.getById=17
+GET https://server.local:8443/api/cards.getById=1
 Authorization: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==
 
 
@@ -84,3 +84,5 @@ Content-Type: application/json
   "code": "86GPPV",
   "newPassword": "newPass123"
 }
+
+###

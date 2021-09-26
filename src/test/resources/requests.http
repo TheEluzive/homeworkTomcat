@@ -92,3 +92,6 @@ Content-Type: application/json
 ###
 GET https://server.local:8443/api/cards.getById=1
 Authorization: Basic $argon2id$v=19$m=4096,t=3,p=1$bZmJV1G8SmPQrqTj/dYTsA$EVA8+h0BSpriIlEIl4DYqfbgyRX5mULE3adj77FMzDI
+
+###
+GET https://server.local:8443/api/cards.getById=1

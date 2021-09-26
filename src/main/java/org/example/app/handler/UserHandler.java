@@ -60,6 +60,7 @@ public class UserHandler {
       final var model = gson.fromJson(req.getReader(), RecoveryPasswordSecondDto.class);
       if (service.setNewPassword(model) == 1)
         resp.getWriter().write("Password successful updated");
+      //TODO: delete recovery and login token
       else throw new RuntimeException("Password wasn`t updated");
     }catch (Exception e){
       throw new RuntimeException(e.getMessage());

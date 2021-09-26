@@ -75,6 +75,17 @@ public class CardRepository {
   public Optional<Card> transaction(TransactionDto transaction){
     //TODO: do transaction like sql-transaction too
     //TODO: checks
+    RowMapper<Long> rowMapper =  resultSet -> resultSet.getLong("balance");
+
+    // language=PostgreSQL
+    final var currentBalance =jdbcTemplate.queryOne(
+            "SELECT balance FROM cards WHERE id = ? ",
+            rowMapper,
+            transaction.getFromCardId()
+    );
+
+    if (currentBalance.orElse(0L) < transaction.getValue())
+      throw new RuntimeException("not enough money");
 
     // language=PostgreSQL
     jdbcTemplate.update("UPDATE cards SET balance=balance - ? WHERE id = ?; ",

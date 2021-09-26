@@ -148,5 +148,15 @@ public class UserRepository {
         );
     }
 
+    public Optional<String> refreshToken(String oldToken, String newToken){
+        RowMapper<String> rowMapper = resultSet -> resultSet.getString("token");
+        //language=PostgreSQL
+        return jdbcTemplate.queryOne(
+                "UPDATE tokens SET token = ? where token = ?",
+                rowMapper,
+                newToken,
+                oldToken
+        );
+    }
 
 }

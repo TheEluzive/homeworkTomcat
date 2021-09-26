@@ -108,5 +108,9 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     }
 
+    public String refreshToken(String oldToken){
+        return repository.refreshToken(oldToken, keyGenerator.generateKey()).orElseThrow();
+    }
+
 
 }

@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "god"
+  "password": "newPass"
 }
 
 > {%
@@ -81,6 +81,6 @@ POST https://server.local:8443/api/rest/users/recovery/setPassword
 Content-Type: application/json
 
 {
-  "code": "6DvfRg",
-  "newPassword": "MyNewPassword123"
+  "code": "86GPPV",
+  "newPassword": "newPass"
 }

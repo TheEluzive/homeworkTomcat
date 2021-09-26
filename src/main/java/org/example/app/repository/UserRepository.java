@@ -8,6 +8,7 @@ import org.example.app.entity.UserEntity;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -138,5 +139,24 @@ public class UserRepository {
         );
 
         //insert into table token(return token)
+    }
+
+    public Optional<String> getLoginByRecoveryToken(String code) {
+        RowMapper<String> rowMapper = resultSet -> resultSet.getString("login");
+        //language=PostgreSQL
+        return jdbcTemplate.queryOne(
+                "SELECT login from token_recovery where token =  ?",
+                rowMapper,
+                code
+                );
+    }
+
+    public int setNewPassword(String login, String newPassword) {
+        //language=PostgreSQL
+        return jdbcTemplate.update(
+                "UPDATE users set password = ? where username = ?",
+                newPassword,
+                login
+        );
     }
 }

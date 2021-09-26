@@ -5,18 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.example.app.domain.User;
 import org.example.app.dto.LoginRequestDto;
 import org.example.app.dto.RecoveryPasswordFirstDto;
+import org.example.app.dto.RecoveryPasswordSecondDto;
 import org.example.app.dto.RegistrationRequestDto;
-import org.example.app.service.CardService;
 import org.example.app.service.UserService;
-import org.example.app.util.UserHelper;
-import org.example.framework.attribute.RequestAttributes;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
 
 @Log
 @RequiredArgsConstructor
@@ -49,19 +45,24 @@ public class UserHandler {
   }
 
   public void getTokenRecovery(HttpServletRequest req, HttpServletResponse resp){
-
     try{
       final var dto = gson.fromJson(req.getReader(), RecoveryPasswordFirstDto.class);
-
       System.out.println("Recovery token =" +
               service.getRecoveryToken(dto.getLogin())
       );
-
-
     }catch (Exception e){
-      e.printStackTrace();
       throw new RuntimeException(e.getMessage());
     }
+  }
 
+  public void setNewPassword(HttpServletRequest req, HttpServletResponse resp){
+    try{
+      final var model = gson.fromJson(req.getReader(), RecoveryPasswordSecondDto.class);
+      if (service.setNewPassword(model) == 1)
+        resp.getWriter().write("Password successful updated");
+      else throw new RuntimeException("Password wasn`t updated");
+    }catch (Exception e){
+      throw new RuntimeException(e.getMessage());
+    }
   }
 }

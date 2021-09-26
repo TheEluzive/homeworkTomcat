@@ -81,6 +81,6 @@ POST https://server.local:8443/api/rest/users/recovery/setPassword
 Content-Type: application/json
 
 {
-  "code": "token",
-  "newPassword": "password"
+  "code": "6DvfRg",
+  "newPassword": "MyNewPassword123"
 }

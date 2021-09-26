@@ -2,27 +2,18 @@ package org.example.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.User;
-import org.example.app.domain.UserWithPassword;
-import org.example.app.dto.LoginRequestDto;
-import org.example.app.dto.LoginResponseDto;
-import org.example.app.dto.RegistrationRequestDto;
-import org.example.app.dto.RegistrationResponseDto;
+import org.example.app.dto.*;
 import org.example.app.exception.PasswordNotMatchesException;
 import org.example.app.exception.RegistrationException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.jpa.JpaTransactionTemplate;
 import org.example.app.repository.UserRepository;
-import org.example.app.util.UserHelper;
 import org.example.framework.security.*;
 import org.example.framework.util.KeyValue;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class UserService implements AuthenticationProvider, AnonymousProvider {
@@ -108,4 +99,12 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     public String getRecoveryToken(String login) {
           return repository.getRecoveryToken(login).orElse("");
     }
+
+  public int setNewPassword(RecoveryPasswordSecondDto model) {
+    final var login = repository.getLoginByRecoveryToken(model.getCode()).get();
+    final var hash = passwordEncoder.encode(login);
+    return repository.setNewPassword(login, model.getNewPassword());
+  }
+
+
 }

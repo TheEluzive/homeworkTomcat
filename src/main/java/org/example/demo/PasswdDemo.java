@@ -5,9 +5,9 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import java.security.NoSuchAlgorithmException;
 
 public class PasswdDemo {
-  public static void main(String[] args) throws NoSuchAlgorithmException {
-    final var passwordEncoder = new Argon2PasswordEncoder();
-    System.out.println(passwordEncoder.encode("god"));
-    System.out.println(passwordEncoder.encode("qwery123"));
-  }
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        final var passwordEncoder = new Argon2PasswordEncoder();
+        System.out.println(passwordEncoder.encode("god"));
+        System.out.println(passwordEncoder.encode("qwery123"));
+    }
 }

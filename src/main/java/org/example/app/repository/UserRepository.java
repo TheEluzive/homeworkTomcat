@@ -1,20 +1,17 @@
 package org.example.app.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.example.app.domain.User;
 import org.example.app.domain.UserWithPassword;
 import org.example.app.entity.UserEntity;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @RequiredArgsConstructor
 public class UserRepository {
@@ -148,7 +145,7 @@ public class UserRepository {
                 "SELECT login from token_recovery where token =  ?",
                 rowMapper,
                 code
-                );
+        );
     }
 
     public int setNewPassword(String login, String newPassword) {

@@ -148,12 +148,5 @@ public class UserRepository {
         );
     }
 
-    public int setNewPassword(String login, String newPassword) {
-        //language=PostgreSQL
-        return jdbcTemplate.update(
-                "UPDATE users set password = ? where username = ?",
-                newPassword,
-                login
-        );
-    }
+
 }

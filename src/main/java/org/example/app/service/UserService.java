@@ -100,13 +100,12 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         return repository.getRecoveryToken(login).orElse("");
     }
 
-    public boolean setNewPassword(RecoveryPasswordSecondDto model) {
+    public String setNewPassword(RecoveryPasswordSecondDto model) {
         final var login = repository.getLoginByRecoveryToken(model.getCode()).orElseThrow();
         final var hash = passwordEncoder.encode(model.getNewPassword().trim());
-        var userId = repository.getByUsername(login).get().getId();
-        return repository.save(userId, login, hash).isPresent(); // TODO: returning
+        var userId = repository.getByUsername(login).orElseThrow().getId();
+        return repository.save(userId, login, hash).orElseThrow().getUsername();
 
-        //return repository.setNewPassword(login, hash);
     }
 
 

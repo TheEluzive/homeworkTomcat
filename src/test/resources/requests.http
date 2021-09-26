@@ -82,5 +82,5 @@ Content-Type: application/json
 
 {
   "code": "86GPPV",
-  "newPassword": "newPass"
+  "newPassword": "newPass123"
 }

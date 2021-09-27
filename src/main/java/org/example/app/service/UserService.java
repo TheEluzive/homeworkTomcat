@@ -14,6 +14,7 @@ import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 @RequiredArgsConstructor
 public class UserService implements AuthenticationProvider, AnonymousProvider {
@@ -25,12 +26,17 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     @Override
     public Authentication authenticate(Authentication authentication) {
         final var token = (String) authentication.getPrincipal();
-        final var roles = new ArrayList<String>();
+        Collection<String> roles;
 
+        if (authentication.getAuthorities() == null){
+            roles = new ArrayList<String>();
+            for (Long n : repository.getRoles(token)) {
+                roles.add(Roles.getById(n));
+            }
+        } else {
+             roles = authentication.getAuthorities();
+         }
 
-        for (Long n : repository.getRoles(token)) {
-            roles.add(Roles.getById(n));
-        }
         return repository.findByToken(token)
                 // TODO: add user roles
                 .map(o -> new TokenAuthentication(o, null, roles, true))

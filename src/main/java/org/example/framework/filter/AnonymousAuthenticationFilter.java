@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class AnonymousAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
+    private final String ANONYMOUS_TOKEN = "GQsxIs7qizYfEXgZvru0VbPQZZjpDWfYit3R1zxr5zZfBO0ZP+S4Nd28i/XWzTS1N6sNyodDzz2ia75jhRYUXQ==99999";
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -23,13 +24,17 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+
         if (!authenticationIsRequired(req)) {
             super.doFilter(req, res, chain);
             return;
         }
 
+
+
+
         try {
-            final var authentication = provider.authenticate(new AnonymousAuthentication(null));
+            final var authentication = provider.authenticate(new AnonymousAuthentication(ANONYMOUS_TOKEN));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);
         } catch (AuthenticationException e) {
             res.sendError(401);
@@ -40,7 +45,7 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
     }
 
     private boolean authenticationIsRequired(HttpServletRequest req) {
-        final var existingAuth = (AnonymousAuthentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
+        final var existingAuth = (Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
 
         if (existingAuth == null || !existingAuth.isAuthenticated()) {
             return true;
@@ -48,4 +53,5 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
 
         return AnonymousAuthentication.class.isAssignableFrom(existingAuth.getClass());
     }
+
 }

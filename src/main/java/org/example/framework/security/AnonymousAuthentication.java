@@ -2,6 +2,7 @@ package org.example.framework.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +17,7 @@ public class AnonymousAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean authenticated) {
-        throw new UnsupportedOperationException();
+
     }
 
     @Override

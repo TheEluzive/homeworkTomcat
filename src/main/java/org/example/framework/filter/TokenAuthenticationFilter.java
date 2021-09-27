@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.app.service.UserService;
-import org.example.app.util.UserHelper;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.*;

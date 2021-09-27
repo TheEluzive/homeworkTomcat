@@ -13,7 +13,6 @@ import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class CookieAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
@@ -31,8 +30,8 @@ public class CookieAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        final var cookie = parseCookie(req.getCookies(), "token");
-        if (cookie == null ) {
+        final var cookie = parseCookie(req.getCookies());
+        if (cookie == null) {
             super.doFilter(req, res, chain);
             return;
         }
@@ -63,13 +62,13 @@ public class CookieAuthenticationFilter extends HttpFilter {
         return AnonymousAuthentication.class.isAssignableFrom(existingAuth.getClass());
     }
 
-    private Cookie parseCookie(Cookie[] cookies, String str){
+    private Cookie parseCookie(Cookie[] cookies) {
 
         Cookie cookie = null;
 
-        if(cookies !=null) {
-            for(Cookie c: cookies) {
-                if(str.equals(c.getName())) {
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("token".equals(c.getName())) {
                     cookie = c;
                     break;
                 }

@@ -60,7 +60,7 @@ public class UserHandler {
             final var model = gson.fromJson(req.getReader(), RecoveryPasswordSecondDto.class);
             final var login = service.setNewPassword(model);
             //TODO: delete recovery token
-            final var responseDto = service.login(new LoginRequestDto(login ,model.getNewPassword()));
+            final var responseDto = service.login(new LoginRequestDto(login, model.getNewPassword()));
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

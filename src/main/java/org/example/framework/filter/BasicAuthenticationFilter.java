@@ -6,19 +6,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.bouncycastle.jcajce.provider.asymmetric.rsa.DigestSignatureSpi;
-import org.bouncycastle.jcajce.provider.digest.MD5;
-import org.example.app.repository.UserRepository;
 import org.example.app.service.UserService;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.attribute.RequestAttributes;
-import org.example.framework.servlet.Handler;
-import org.example.jdbc.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.example.framework.security.*;
 
 import java.io.IOException;
-import java.util.Base64;
 
 public class BasicAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;

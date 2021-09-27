@@ -29,14 +29,14 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var token = (String) authentication.getPrincipal();
         Collection<String> roles;
 
-        if (authentication.getAuthorities() == null){
-            roles = new ArrayList<String>();
+        if (authentication.getAuthorities() == null) {
+            roles = new ArrayList<>();
             for (Long n : repository.getRoles(token)) {
                 roles.add(Roles.getById(n));
             }
         } else {
-             roles = authentication.getAuthorities();
-         }
+            roles = authentication.getAuthorities();
+        }
 
         return repository.findByToken(token)
                 // TODO: add user roles
@@ -117,19 +117,19 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     }
 
-    public void refreshToken(String oldToken){
-         repository.refreshToken(oldToken, keyGenerator.generateKey());
+    public void refreshToken(String oldToken) {
+        repository.refreshToken(oldToken, keyGenerator.generateKey());
     }
 
-    public String getTokenFromBase64LogPass(String base64LogPas){
+    public String getTokenFromBase64LogPass(String base64LogPas) {
         return repository.getTokenByBase64(base64LogPas);
     }
 
-    public void isTokenAlive(String token){
+    public void isTokenAlive(String token) {
         final var time = repository.getTokenCreatedTime(token).getTime();
         final var currentTime = System.currentTimeMillis();
         final var differenceInHours = (currentTime - time) / 1000 / 3600;
-        if (differenceInHours > tokenLifeInHours ){
+        if (differenceInHours > tokenLifeInHours) {
             throw new RuntimeException("Token life is over. Get new auth token!");
         }
     }

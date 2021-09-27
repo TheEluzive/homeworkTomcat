@@ -152,8 +152,8 @@ public class UserRepository {
         );
     }
 
-    public void refreshToken(String oldToken, String newToken){
-         //language=PostgreSQL
+    public void refreshToken(String oldToken, String newToken) {
+        //language=PostgreSQL
         jdbcTemplate.update(
                 "UPDATE tokens SET token = ? where token = ?",
                 newToken,
@@ -161,17 +161,6 @@ public class UserRepository {
         );
     }
 
-    public String getBasicAuthData(String stringBase64LogPass){
-        RowMapper<String> rowMapper = resultSet -> resultSet.getString("base64");
-        //language=PostgreSQL
-        jdbcTemplate.queryOne(
-                "SELECT base64 FROM base64data where base64 = ? ",
-                rowMapper,
-                stringBase64LogPass
-
-        );
-        return "";
-    }
 
     public void saveBase64LogPas(String base64LogPass) {
 
@@ -180,18 +169,18 @@ public class UserRepository {
                 base64LogPass);
     }
 
-    public String getTokenByBase64(String base64LogPass){
+    public String getTokenByBase64(String base64LogPass) {
 
         //language=PostgreSQL
         final var userId = jdbcTemplate.queryOne(
-          "SELECT id from base64data where base64 = ?",
-          rowMapperId,
-          base64LogPass
+                "SELECT id from base64data where base64 = ?",
+                rowMapperId,
+                base64LogPass
         ).orElse(-1L);
 
-       //language=PostgreSQL
+        //language=PostgreSQL
         return jdbcTemplate.queryOne(
-          "SELECT token from tokens where \"userId\" = ?",
+                "SELECT token from tokens where \"userId\" = ?",
                 rowMapperToken,
                 userId
         ).orElseThrow();

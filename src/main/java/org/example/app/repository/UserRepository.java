@@ -151,11 +151,10 @@ public class UserRepository {
         );
     }
 
-    public Optional<String> refreshToken(String oldToken, String newToken){
+    public void refreshToken(String oldToken, String newToken){
          //language=PostgreSQL
-        return jdbcTemplate.queryOne(
+        jdbcTemplate.update(
                 "UPDATE tokens SET token = ? where token = ?",
-                rowMapperToken,
                 newToken,
                 oldToken
         );

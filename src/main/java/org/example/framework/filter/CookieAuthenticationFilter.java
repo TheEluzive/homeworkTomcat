@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.app.service.UserService;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.*;
@@ -49,6 +50,8 @@ public class CookieAuthenticationFilter extends HttpFilter {
             return;
         }
 
+        UserService userService = (UserService) provider;
+        userService.refreshToken(cookie.getValue());
         super.doFilter(req, res, chain);
     }
 

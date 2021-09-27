@@ -116,8 +116,8 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     }
 
-    public String refreshToken(String oldToken){
-        return repository.refreshToken(oldToken, keyGenerator.generateKey()).orElseThrow();
+    public void refreshToken(String oldToken){
+         repository.refreshToken(oldToken, keyGenerator.generateKey());
     }
 
     public String getTokenFromBase64LogPass(String base64LogPas){

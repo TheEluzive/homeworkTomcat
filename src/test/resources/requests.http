@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "newPass123"
+  "password": "god"
 }
 
 > {%
@@ -33,8 +33,7 @@ client.test("Request executed successfully", function() {
 ###
 
 GET https://server.local:8443/api/cards.getAll
-Authorization: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==
-
+Authorization: uB2Z2rZ4oxxXigJTocBeSvmNNmr4C+Qhxs4bhu0OEZ+QPWiV72uqf/7pylC+s2XMYFTSwpZCz6DN+UTzXURrSg==
 ###
 
 GET https://server.local:8443/api/cards.getById=1

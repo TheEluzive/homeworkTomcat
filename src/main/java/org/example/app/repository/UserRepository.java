@@ -153,6 +153,7 @@ public class UserRepository {
     }
 
     public void refreshToken(String oldToken, String newToken) {
+        // TODO: var timestamp = new Timestamp(System.currentTimeMillis());
         //language=PostgreSQL
         jdbcTemplate.update(
                 "UPDATE tokens SET token = ? where token = ?",

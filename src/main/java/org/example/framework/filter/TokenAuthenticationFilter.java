@@ -28,15 +28,16 @@ public class TokenAuthenticationFilter extends HttpFilter {
             super.doFilter(req, res, chain);
             return;
         }
-        final var userService = (UserService) provider;
+
         final var token = req.getHeader("Authorization");
-        userService.isTokenAlive(token);
+
 
         if (token == null || token.contains("Basic ")) {//TODO maybe it is postman pattern
             super.doFilter(req, res, chain);
             return;
         }
-
+        final var userService = (UserService) provider;
+        userService.isTokenAlive(token);
 
         try {
             final var authentication = provider.authenticate(new TokenAuthentication(token, null));

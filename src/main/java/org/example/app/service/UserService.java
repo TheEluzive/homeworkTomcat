@@ -22,6 +22,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     private final JpaTransactionTemplate transactionTemplate;
     private final PasswordEncoder passwordEncoder;
     private final StringKeyGenerator keyGenerator;
+    private final long tokenLifeInHours = 1L;
 
     @Override
     public Authentication authenticate(Authentication authentication) {
@@ -122,6 +123,15 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     public String getTokenFromBase64LogPass(String base64LogPas){
         return repository.getTokenByBase64(base64LogPas);
+    }
+
+    public void isTokenAlive(String token){
+        final var time = repository.getTokenCreatedTime(token).getTime();
+        final var currentTime = System.currentTimeMillis();
+        final var differenceInHours = (currentTime - time) / 1000 / 3600;
+        if (differenceInHours > tokenLifeInHours ){
+            throw new RuntimeException("Token life is over. Get new auth token!");
+        }
     }
 
 

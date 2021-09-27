@@ -16,6 +16,8 @@ public class UserHelper {
         return ((User) ((Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR)).getPrincipal());
     }
 
+
+
     public static boolean isRoles(HttpServletRequest req, String stringRole) {
         ArrayList<String> listRoles = (ArrayList<String>)
                 ((Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR)).getAuthorities();

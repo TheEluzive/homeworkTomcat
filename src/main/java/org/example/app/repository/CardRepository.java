@@ -6,6 +6,7 @@ import org.example.app.dto.TransactionDto;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +100,7 @@ public class CardRepository {
         );
         return getById(transaction.getFromCardId());
     }
+
 
 
 }

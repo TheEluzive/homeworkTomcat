@@ -10,6 +10,7 @@ import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -193,6 +194,17 @@ public class UserRepository {
           "SELECT token from tokens where \"userId\" = ?",
                 rowMapperToken,
                 userId
+        ).orElseThrow();
+    }
+
+    public Timestamp getTokenCreatedTime(String token) {
+
+        RowMapper<Timestamp> longRowMapper = resultSet -> resultSet.getTimestamp("created");
+        // language=PostgreSQL
+        return jdbcTemplate.queryOne(
+                "SELECT created from tokens where token = ?",
+                longRowMapper,
+                token
         ).orElseThrow();
     }
 }

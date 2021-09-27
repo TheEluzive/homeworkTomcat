@@ -31,27 +31,25 @@ public class CookieAuthenticationFilter extends HttpFilter {
             return;
         }
 
-
-
         final var cookie = parseCookie(req.getCookies(), "token");
-
         if (cookie == null ) {
             super.doFilter(req, res, chain);
             return;
         }
 
+        final var userService = (UserService) provider;
+        final var token = cookie.getValue();
+        userService.isTokenAlive(token);
+
         try {
             final var authentication = provider.authenticate(new TokenAuthentication(cookie.getValue(), null));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);
-
-
         } catch (AuthenticationException e) {
             res.sendError(401);
             return;
         }
 
-        UserService userService = (UserService) provider;
-        userService.refreshToken(cookie.getValue());
+        userService.refreshToken(token);
         super.doFilter(req, res, chain);
     }
 

@@ -99,8 +99,11 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
 
     public void isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
+
         final var ownerId = service.getOwnerID(cardId);
         final var authorizedUserId = UserHelper.getUser(req).getId();
+
+
         final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
         if (ownerId != authorizedUserId && !isAdmin)
             throw new IllegalAccessCardsException("User with " + authorizedUserId +

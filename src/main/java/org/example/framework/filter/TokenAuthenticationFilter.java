@@ -29,8 +29,10 @@ public class TokenAuthenticationFilter extends HttpFilter {
             super.doFilter(req, res, chain);
             return;
         }
-
+        final var userService = (UserService) provider;
         final var token = req.getHeader("Authorization");
+        userService.isTokenAlive(token);
+
         if (token == null || token.contains("Basic ")) {//TODO maybe it is postman pattern
             super.doFilter(req, res, chain);
             return;
@@ -45,7 +47,6 @@ public class TokenAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        UserService userService = (UserService) provider;
         userService.refreshToken(token);
         super.doFilter(req, res, chain);
     }

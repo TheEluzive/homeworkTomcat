@@ -89,7 +89,7 @@
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true">
         <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
         <SSLHostConfig protocols="TLSv1.3">
-            <Certificate certificateKeystoreFile="conf/certs/server.jks" certificateKeystorePassword="passphrase" />
+            <Certificate certificateKeystoreFile="conf/certs/server.jks" certificateKeystorePassword="pass123" />
         </SSLHostConfig>
     </Connector>
 

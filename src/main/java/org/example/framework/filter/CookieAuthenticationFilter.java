@@ -13,6 +13,7 @@ import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.example.framework.filter.FilterHelper.authenticationIsRequired;
 
@@ -33,13 +34,13 @@ public class CookieAuthenticationFilter extends HttpFilter {
         }
 
         final var cookie = parseCookie(req.getCookies());
-        if (cookie == null) {
+        if (cookie.isEmpty()) {
             super.doFilter(req, res, chain);
             return;
         }
 
         final var userService = (UserService) provider;
-        final var token = cookie.getValue();
+        final var token = cookie.get().getValue();
         userService.isTokenAlive(token);
 
         try {
@@ -56,18 +57,15 @@ public class CookieAuthenticationFilter extends HttpFilter {
 
 
 
-    private Cookie parseCookie(Cookie[] cookies) {
-
-        Cookie cookie = null;
+    private Optional<Cookie> parseCookie(Cookie[] cookies) {
 
         if (cookies != null) {
             for (Cookie c : cookies) {
                 if ("token".equals(c.getName())) {
-                    cookie = c;
-                    break;
+                    return Optional.of(c);
                 }
             }
         }
-        return cookie;
+        return Optional.empty();
     }
 }

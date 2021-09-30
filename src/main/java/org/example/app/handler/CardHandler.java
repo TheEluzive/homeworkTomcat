@@ -40,7 +40,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     public void getById(HttpServletRequest req, HttpServletResponse resp) {
         try {
             final var cardId = parseLongRequest(req, "cardId");
-            isLegalAccess(cardId, req);
+            service.isLegalAccess(cardId, req);
 
             final var data = service.getByID(cardId);
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
@@ -67,7 +67,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     public void blockById(HttpServletRequest req, HttpServletResponse resp) {
         try {
             final var cardId = parseLongRequest(req, "cardId");
-            isLegalAccess(cardId, req);
+            service.isLegalAccess(cardId, req);
             final var result = service.blockById(cardId);
             if (result < 1)
                 throw new RuntimeException();
@@ -85,7 +85,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             if (requestDto.getValue() < 0)
                 throw new RuntimeException();
 
-            isLegalTransaction(requestDto.getFromCardId(), req);
+            service.isLegalTransaction(requestDto.getFromCardId(), req);
             final var data = service.transaction(requestDto);
             //return updated card from that was transaction
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
@@ -98,25 +98,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
     }
 
 
-    public void isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
 
-        final var ownerId = service.getOwnerID(cardId);
-        final var authorizedUserId = UserHelper.getUser(req).getId();
-
-
-        final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
-        if (ownerId != authorizedUserId && !isAdmin)
-            throw new IllegalAccessCardsException("User with " + authorizedUserId +
-                    "cant access to card " + cardId);
-    }
-
-    public void isLegalTransaction(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
-        final var ownerId = service.getOwnerID(cardId);
-        final var authorizedUserId = UserHelper.getUser(req).getId();
-        if (ownerId != authorizedUserId)
-            throw new IllegalAccessCardsException("User with " + authorizedUserId +
-                    "cant access to card " + cardId);
-    }
 
     public Long parseLongRequest(HttpServletRequest req, String group) {
         try {

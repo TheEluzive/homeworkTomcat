@@ -47,9 +47,8 @@ public class UserHandler {
     public void getTokenRecovery(HttpServletRequest req, HttpServletResponse resp) {
         try {
             final var dto = gson.fromJson(req.getReader(), RecoveryPasswordFirstDto.class);
-            System.out.println("Recovery token =" +
-                    service.getRecoveryToken(dto.getLogin())
-            );
+            final var recoveryToken = service.getRecoveryToken(dto.getLogin());
+            log.log(Level.INFO, "Recovery token =" + recoveryToken);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

@@ -13,6 +13,8 @@ import org.example.framework.security.*;
 
 import java.io.IOException;
 
+import static org.example.framework.filter.FilterHelper.authenticationIsRequired;
+
 public class BasicAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
 
@@ -53,13 +55,5 @@ public class BasicAuthenticationFilter extends HttpFilter {
         super.doFilter(req, res, chain);
     }
 
-    private boolean authenticationIsRequired(HttpServletRequest req) {
-        final var existingAuth = (Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
 
-        if (existingAuth == null || !existingAuth.isAuthenticated()) {
-            return true;
-        }
-
-        return AnonymousAuthentication.class.isAssignableFrom(existingAuth.getClass());
-    }
 }

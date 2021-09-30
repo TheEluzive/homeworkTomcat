@@ -15,6 +15,8 @@ import org.example.framework.security.AuthenticationProvider;
 
 import java.io.IOException;
 
+import static org.example.framework.filter.FilterHelper.authenticationIsRequired;
+
 public class AnonymousAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
     private final String ANONYMOUS_TOKEN = "GQsxIs7qizYfEXgZvru0VbPQZZjpDWfYit3R1zxr5zZfBO0ZP+S4Nd28i/XWzTS1N6sNyodDzz2ia75jhRYUXQ==99999";
@@ -45,14 +47,6 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
         super.doFilter(req, res, chain);
     }
 
-    private boolean authenticationIsRequired(HttpServletRequest req) {
-        final var existingAuth = (Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
 
-        if (existingAuth == null || !existingAuth.isAuthenticated()) {
-            return true;
-        }
-
-        return AnonymousAuthentication.class.isAssignableFrom(existingAuth.getClass());
-    }
 
 }

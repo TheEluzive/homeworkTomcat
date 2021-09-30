@@ -44,7 +44,7 @@ public class CookieAuthenticationFilter extends HttpFilter {
         userService.isTokenAlive(token);
 
         try {
-            final var authentication = provider.authenticate(new TokenAuthentication(cookie.getValue(), null));
+            final var authentication = provider.authenticate(new TokenAuthentication(cookie.get().getValue(), null));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);
         } catch (AuthenticationException e) {
             res.sendError(401);

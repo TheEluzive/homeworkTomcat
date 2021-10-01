@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.app.dto.LoginRequestDto;
-import org.example.app.dto.RecoveryPasswordFirstDto;
-import org.example.app.dto.RecoveryPasswordSecondDto;
+import org.example.app.dto.RecoveryPasswordResetPasswordDto;
+import org.example.app.dto.RecoveryPasswordNewPasswordDto;
 import org.example.app.dto.RegistrationRequestDto;
 import org.example.app.service.UserService;
 
@@ -49,7 +49,7 @@ public class UserHandler {
 
     public void getTokenRecovery(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            final var dto = gson.fromJson(req.getReader(), RecoveryPasswordFirstDto.class);
+            final var dto = gson.fromJson(req.getReader(), RecoveryPasswordResetPasswordDto.class);
             final var recoveryToken = service.getRecoveryToken(dto.getLogin());
             log.log(Level.INFO, "Recovery token =" + recoveryToken);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class UserHandler {
 
     public void setNewPassword(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            final var model = gson.fromJson(req.getReader(), RecoveryPasswordSecondDto.class);
+            final var model = gson.fromJson(req.getReader(), RecoveryPasswordNewPasswordDto.class);
             final var login = service.setNewPassword(model);
             //TODO: delete recovery token
             final var responseDto = service.login(new LoginRequestDto(login, model.getNewPassword()));

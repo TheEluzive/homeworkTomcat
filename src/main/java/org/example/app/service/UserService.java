@@ -13,7 +13,6 @@ import org.example.framework.util.KeyValue;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         Collection<String> roles = repository.getRoles(token);
 
         final var newToken = refreshToken(token);
-        
+
 
         return repository.findByToken(newToken)
                 // TODO: add user roles
@@ -104,7 +103,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         return repository.getRecoveryToken(login).orElse("");
     }
 
-    public String setNewPassword(RecoveryPasswordSecondDto model) {
+    public String setNewPassword(RecoveryPasswordNewPasswordDto model) {
         final var login = repository.getLoginByRecoveryToken(model.getCode()).orElseThrow();
         final var hash = passwordEncoder.encode(model.getNewPassword().trim());
         var userId = repository.getByUsername(login).orElseThrow().getId();

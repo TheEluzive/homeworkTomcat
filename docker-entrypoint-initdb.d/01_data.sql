@@ -26,4 +26,8 @@ ALTER SEQUENCE cards_id_seq RESTART WITH 3;
 
 INSERT INTO roles (role) VALUES ('ROLE_ADMIN');
 INSERT INTO roles (role) VALUES ('ROLE_USER');
+INSERT INTO roles (role) VALUES ('ROLE_ANONYMOUS');
+
+
 INSERT INTO user_roles ("user", role) VALUES (1, 1);
+INSERT INTO user_roles ("user", role) VALUES (2, 3);

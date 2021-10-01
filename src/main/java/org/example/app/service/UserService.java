@@ -5,6 +5,7 @@ import org.example.app.domain.User;
 import org.example.app.dto.*;
 import org.example.app.exception.PasswordNotMatchesException;
 import org.example.app.exception.RegistrationException;
+import org.example.app.exception.TokenDeprecatedException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.jpa.JpaTransactionTemplate;
 import org.example.app.repository.UserRepository;
@@ -123,7 +124,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var login = repository.getLoginByRecoveryToken(model.getCode()).orElseThrow();
         final var hash = passwordEncoder.encode(model.getNewPassword().trim());
         var userId = repository.getByUsername(login).orElseThrow().getId();
-        return repository.save(userId, login, hash).orElseThrow().getUsername();
+        return repository.save(userId, login, hash).orElseThrow(UserNotFoundException::new).getUsername();
 
     }
 
@@ -134,6 +135,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     }
 
     public String getTokenFromBase64LogPass(String base64LogPas) {
+
         return repository.getTokenByBase64(base64LogPas);
     }
 
@@ -142,7 +144,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var currentTime = System.currentTimeMillis();
         final var differenceInHours = (currentTime - time) / 1000 / 3600;
         if (differenceInHours > tokenLifeInHours) {
-            throw new RuntimeException("Token life is over. Get new auth token!");
+            throw new TokenDeprecatedException("Token life is over. Get new auth token!");
         }
     }
 

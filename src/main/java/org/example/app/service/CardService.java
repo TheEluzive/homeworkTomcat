@@ -4,7 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.Card;
 import org.example.app.dto.TransactionDto;
+import org.example.app.exception.CardOrderNotSuccessfullyException;
+import org.example.app.exception.CardOwnerNotFoundException;
 import org.example.app.exception.IllegalAccessCardsException;
+import org.example.app.exception.UserNotFoundException;
 import org.example.app.repository.CardRepository;
 import org.example.app.util.UserHelper;
 import org.example.framework.security.Roles;
@@ -23,32 +26,27 @@ public class CardService {
 
     public Card getByID(Long cardId) {
         Optional<Card> card = cardRepository.getById(cardId);
-        return card.orElse(null);
-
+        return card.orElseThrow(UserNotFoundException::new);
     }
 
     public long getOwnerID(Long cardId) {
         Optional<Long> ownerId = cardRepository.getOwnerID(cardId);
-        return ownerId.orElse(-1L);
+        return ownerId.orElseThrow(CardOwnerNotFoundException::new);
     }
 
     public int blockById(Long cardId) {
+        //TODO: проверить что возвращает метод 0 или н-строк
         return cardRepository.blockById(cardId);
     }
 
-    public Optional<Card> order(Long ownerId) {
-        try {
+    public Card order(Long ownerId) {
             long cardId = cardRepository.order(ownerId);
-            return cardRepository.getById(cardId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+            return cardRepository.getById(cardId)
+                    .orElseThrow(CardOrderNotSuccessfullyException::new);
     }
 
     public Optional<Card> transaction(TransactionDto transaction) {
         return cardRepository.transaction(transaction);
-
     }
 
     public void isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {

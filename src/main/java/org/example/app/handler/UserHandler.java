@@ -14,6 +14,9 @@ import org.example.app.service.UserService;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import static org.example.app.handler.HandlerHelper.CONTENT_TYPE;
+import static org.example.app.handler.HandlerHelper.CONTENT_TYPE_JSON;
+
 @Log
 @RequiredArgsConstructor
 public class UserHandler {
@@ -25,7 +28,7 @@ public class UserHandler {
             log.log(Level.INFO, "register");
             final var requestDto = gson.fromJson(req.getReader(), RegistrationRequestDto.class);
             final var responseDto = service.register(requestDto);
-            resp.setHeader("Content-Type", "application/json");
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -37,7 +40,7 @@ public class UserHandler {
             log.log(Level.INFO, "register");
             final var requestDto = gson.fromJson(req.getReader(), LoginRequestDto.class);
             final var responseDto = service.login(requestDto);
-            resp.setHeader("Content-Type", "application/json");
+            resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (IOException e) {
             throw new RuntimeException(e);

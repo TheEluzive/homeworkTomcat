@@ -6,22 +6,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.app.dto.TransactionDto;
-import org.example.app.exception.IllegalAccessCardsException;
 import org.example.app.service.CardService;
 import org.example.app.util.UserHelper;
 import org.example.framework.attribute.RequestAttributes;
-import org.example.framework.security.Roles;
+
 
 import java.io.IOException;
 import java.util.regex.Matcher;
+
+import static org.example.app.handler.HandlerHelper.*;
+import static org.example.app.handler.HandlerHelper.CONTENT_TYPE;
 
 @Log
 @RequiredArgsConstructor
 public class CardHandler { // Servlet -> Controller -> Service (domain) -> domain
     private final CardService service;
     private final Gson gson;
-    private final String CONTENT_TYPE = "Content-Type";
-    private final String CONTENT_TYPE_JSON = "application/json";
+
 
     public void getAll(HttpServletRequest req, HttpServletResponse resp) {
         try {

@@ -50,7 +50,7 @@ public class CardService {
     }
 
     public void isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
-
+        //TODO: make boolean IsAdminHaveAccessToOperation
         final var ownerId = getOwnerID(cardId);
         final var authorizedUserId = UserHelper.getUser(req).getId();
 
@@ -61,8 +61,10 @@ public class CardService {
                     "cant access to card " + cardId);
     }
 
-    public void isLegalTransaction(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
+    public void isLegalTransaction(String cardNumber, HttpServletRequest req) throws IllegalAccessCardsException {
+        final var cardId = cardRepository.getCardIdByNumber(cardNumber);
         final var ownerId = getOwnerID(cardId);
+
         final var authorizedUserId = UserHelper.getUser(req).getId();
         if (ownerId != authorizedUserId)
             throw new IllegalAccessCardsException("User with " + authorizedUserId +

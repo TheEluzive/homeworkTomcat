@@ -100,15 +100,20 @@ public class CardRepository {
                 transaction.getToCardNumber()
         );
 
-        RowMapper<Long> rowMapperId = resultSet -> resultSet.getLong("id");
-        // language=PostgreSQL
-        final var fromCardId = jdbcTemplate.queryOne(
-                "Select id from cards where number = ?",
-                rowMapperId,
-                transaction.getFromCardNumber()
-        );
-        return getById(fromCardId.orElseThrow(CardNotFoundException::new));
+        final var fromCardId = getCardIdByNumber(transaction.getFromCardNumber());
+        return getById(fromCardId);
     }
 
 
+    public Long getCardIdByNumber(String number) {
+        RowMapper<Long> rowMapperId = resultSet -> resultSet.getLong("id");
+        // language=PostgreSQL
+        return  jdbcTemplate.queryOne(
+                "Select id from cards where number = ?",
+                rowMapperId,
+                number
+        ).orElseThrow(CardNotFoundException::new);
+
+
+    }
 }

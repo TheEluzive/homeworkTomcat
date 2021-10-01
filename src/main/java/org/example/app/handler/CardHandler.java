@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.app.dto.TransactionDto;
+import org.example.app.exception.*;
 import org.example.app.service.CardService;
 import org.example.app.util.UserHelper;
 import org.example.framework.attribute.RequestAttributes;
@@ -32,7 +33,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new GetAllCardsException(e);
 
         }
     }
@@ -48,7 +49,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new GetByIdException(e);
         }
     }
 
@@ -60,7 +61,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             resp.getWriter().write(gson.toJson(card));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new CardNotOrderedException(e);
         }
     }
 
@@ -73,7 +74,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new CardBlockByIdException(e);
         }
     }
 
@@ -81,8 +82,9 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
         try {
             final var requestDto = gson.fromJson(req.getReader(), TransactionDto.class);
             //TODO checks
-            if (requestDto.getValue() < 0)
-                throw new RuntimeException();
+            if (requestDto.getValue() <= 0)
+                throw new TransactionValueZeroOrNegativeException();
+
 
             service.isLegalTransaction(requestDto.getFromCardNumber(), req);
             final var data = service.transaction(requestDto);
@@ -91,7 +93,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             resp.getWriter().write(gson.toJson(data));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new CardTransactionException(e);
         }
 
     }

@@ -23,7 +23,7 @@ public class UserRepository {
             resultSet.getString("username")
     );
 
-    private final RowMapper<Long> rowMapperRoles = resultSet -> resultSet.getLong("role");
+    private final RowMapper<String> rowMapperRoles = resultSet -> resultSet.getString("role");
 
     private final RowMapper<UserWithPassword> rowMapperWithPassword = resultSet -> new UserWithPassword(
             resultSet.getLong("id"),
@@ -90,14 +90,15 @@ public class UserRepository {
         );
     }
 
-    public List<Long> getRoles(String token) {
+    public List<String> getRoles(String token) {
 
         // language=PostgreSQL
         return jdbcTemplate.queryAll(
                 """
-                        SELECT ur."role" FROM tokens t
+                        SELECT r.role FROM tokens t
                         JOIN users u ON t."userId" = u.id
                         JOIN user_roles ur ON ur."user" = u.id
+                        JOIN roles r on ur.role = r.id
                         WHERE t.token = ?
                                         
                         """,

@@ -28,10 +28,8 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     public Authentication authenticate(Authentication authentication) {
         final var token = (String) authentication.getPrincipal();
 
-        Collection<String> roles = new ArrayList<>();
-        for (Long n : repository.getRoles(token)) {
-            roles.add(Roles.getById(n));
-        }
+        Collection<String> roles = repository.getRoles(token);
+
 
 
         return repository.findByToken(token)

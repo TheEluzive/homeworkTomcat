@@ -53,6 +53,7 @@ public class BasicAuthenticationFilter extends HttpFilter {
         final var principal = values[0];
         final var credential = values[1];
 
+
         try {
             final var authentication = this.provider.authenticate(new BasicAuthentication(principal, credential));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);

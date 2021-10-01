@@ -2,6 +2,7 @@ package org.example.app.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.User;
+import org.example.app.domain.UserWithPassword;
 import org.example.app.dto.*;
 import org.example.app.exception.PasswordNotMatchesException;
 import org.example.app.exception.RegistrationException;
@@ -45,8 +46,12 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
             final var hash = passwordEncoder.encode(password);
             roles = repository.getRolesByUsername(username);
 
-            return repository.getByUsernamePassword(username, hash).
-                    map(o -> new BasicAuthentication(o, null, roles, true))
+
+            final var userWithPassword = getUserByLogBass(username,password);
+            final var user = repository.getByUsername(userWithPassword.getUsername());
+
+            return user.
+                    map(o -> new BasicAuthentication(o, password, roles, true))
                     .orElseThrow(AuthenticationException::new);
 
         }
@@ -139,6 +144,24 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         if (differenceInHours > tokenLifeInHours) {
             throw new TokenDeprecatedException("Token life is over. Get new auth token!");
         }
+    }
+
+    private UserWithPassword getUserByLogBass(String username, String password){
+        return transactionTemplate.executeInTransaction((entityManager, transaction) -> {
+            final var saved = repository.getByUsernameWithPassword(
+                    entityManager,
+                    transaction,
+                    username
+            ).orElseThrow(UserNotFoundException::new);
+
+            // TODO: be careful - slow
+            if (!passwordEncoder.matches(password, saved.getPassword())) {
+                // FIXME: Security issue
+                throw new PasswordNotMatchesException();
+            }
+
+            return saved;
+        });
     }
 
 

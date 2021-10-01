@@ -35,6 +35,8 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
             return;
         }
 
+        //TODO: generate new Anonymous
+
 
         try {
             final var authentication = provider.authenticate(new AnonymousAuthentication(ANONYMOUS_TOKEN));

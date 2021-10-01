@@ -24,6 +24,7 @@ public class CookieAuthenticationFilter extends HttpFilter {
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
         provider = ((AuthenticationProvider) getServletContext().getAttribute(ContextAttributes.AUTH_PROVIDER_ATTR));
+
     }
 
     @Override
@@ -39,9 +40,9 @@ public class CookieAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        final var userService = (UserService) provider;
+
         final var token = cookie.get().getValue();
-        userService.isTokenAlive(token);
+
 
         try {
             final var authentication = provider.authenticate(new TokenAuthentication(cookie.get().getValue(), null));
@@ -51,10 +52,9 @@ public class CookieAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        userService.refreshToken(token);
+
         super.doFilter(req, res, chain);
     }
-
 
 
     private Optional<Cookie> parseCookie(Cookie[] cookies) {

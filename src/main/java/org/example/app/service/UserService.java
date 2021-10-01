@@ -27,12 +27,11 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     @Override
     public Authentication authenticate(Authentication authentication) {
         final var token = (String) authentication.getPrincipal();
-
+        isTokenAlive(token);
         Collection<String> roles = repository.getRoles(token);
+        final var newToken = refreshToken(token);
 
-
-
-        return repository.findByToken(token)
+        return repository.findByToken(newToken)
                 // TODO: add user roles
                 .map(o -> new TokenAuthentication(o, null, roles, true))
                 .orElseThrow(AuthenticationException::new);
@@ -111,8 +110,10 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     }
 
-    public void refreshToken(String oldToken) {
-        repository.refreshToken(oldToken, keyGenerator.generateKey());
+    public String refreshToken(String oldToken) {
+        final var newToken = keyGenerator.generateKey();
+        repository.refreshToken(oldToken, newToken);
+        return newToken;
     }
 
     public String getTokenFromBase64LogPass(String base64LogPas) {

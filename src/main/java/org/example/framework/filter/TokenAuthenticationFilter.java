@@ -36,8 +36,7 @@ public class TokenAuthenticationFilter extends HttpFilter {
             super.doFilter(req, res, chain);
             return;
         }
-        final var userService = (UserService) provider;
-        userService.isTokenAlive(token);
+
 
         try {
             final var authentication = provider.authenticate(new TokenAuthentication(token, null));
@@ -47,7 +46,7 @@ public class TokenAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        userService.refreshToken(token);
+
         super.doFilter(req, res, chain);
     }
 

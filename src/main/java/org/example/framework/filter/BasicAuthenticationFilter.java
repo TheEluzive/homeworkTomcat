@@ -41,6 +41,7 @@ public class BasicAuthenticationFilter extends HttpFilter {
             return;
         }
 
+        //TODO: fix basic token
         UserService provider = (UserService) this.provider;
         var token = provider.getTokenFromBase64LogPass(base64LogPass);
 

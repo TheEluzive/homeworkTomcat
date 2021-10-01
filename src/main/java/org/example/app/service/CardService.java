@@ -6,7 +6,7 @@ import org.example.app.domain.Card;
 import org.example.app.dto.TransactionDto;
 import org.example.app.exception.CardOrderNotSuccessfullyException;
 import org.example.app.exception.CardOwnerNotFoundException;
-import org.example.app.exception.IllegalAccessCardsException;
+import org.example.app.exception.CardIllegalAccessException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.repository.CardRepository;
 import org.example.app.util.UserHelper;
@@ -49,7 +49,7 @@ public class CardService {
         return cardRepository.transaction(transaction);
     }
 
-    public void isLegalAccess(long cardId, HttpServletRequest req) throws IllegalAccessCardsException {
+    public void isLegalAccess(long cardId, HttpServletRequest req) throws CardIllegalAccessException {
         //TODO: make boolean IsAdminHaveAccessToOperation
         final var ownerId = getOwnerID(cardId);
         final var authorizedUserId = UserHelper.getUser(req).getId();
@@ -57,17 +57,17 @@ public class CardService {
 
         final var isAdmin = UserHelper.isRoles(req, Roles.ROLE_ADMIN);
         if (ownerId != authorizedUserId && !isAdmin)
-            throw new IllegalAccessCardsException("User with " + authorizedUserId +
+            throw new CardIllegalAccessException("User with " + authorizedUserId +
                     "cant access to card " + cardId);
     }
 
-    public void isLegalTransaction(String cardNumber, HttpServletRequest req) throws IllegalAccessCardsException {
+    public void isLegalTransaction(String cardNumber, HttpServletRequest req) throws CardIllegalAccessException {
         final var cardId = cardRepository.getCardIdByNumber(cardNumber);
         final var ownerId = getOwnerID(cardId);
 
         final var authorizedUserId = UserHelper.getUser(req).getId();
         if (ownerId != authorizedUserId)
-            throw new IllegalAccessCardsException("User with " + authorizedUserId +
+            throw new CardIllegalAccessException("User with " + authorizedUserId +
                     "cant access to card " + cardId);
     }
 

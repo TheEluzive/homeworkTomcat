@@ -33,7 +33,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new GetAllCardsException(e);
+            throw new CardsGetAllException(e);
 
         }
     }
@@ -49,7 +49,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new GetByIdException(e);
+            throw new CardGetByIdException(e);
         }
     }
 

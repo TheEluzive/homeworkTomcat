@@ -1,5 +1,6 @@
 package org.example.app.handler;
 
+import antlr.Token;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,10 @@ import org.example.app.dto.LoginRequestDto;
 import org.example.app.dto.RecoveryPasswordNewPasswordDto;
 import org.example.app.dto.RecoveryPasswordResetPasswordDto;
 import org.example.app.dto.RegistrationRequestDto;
+import org.example.app.exception.SetNewPasswordException;
+import org.example.app.exception.TokenRecoveryException;
+import org.example.app.exception.UserLoginException;
+import org.example.app.exception.UserRegisterException;
 import org.example.app.service.UserService;
 
 import java.io.IOException;
@@ -31,7 +36,7 @@ public class UserHandler {
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UserRegisterException(e);
         }
     }
 
@@ -43,7 +48,7 @@ public class UserHandler {
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UserLoginException(e);
         }
     }
 
@@ -53,7 +58,7 @@ public class UserHandler {
             final var recoveryToken = service.getRecoveryToken(dto.getLogin());
             log.log(Level.INFO, "Recovery token =" + recoveryToken);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new TokenRecoveryException(e);
         }
     }
 
@@ -65,7 +70,7 @@ public class UserHandler {
             final var responseDto = service.login(new LoginRequestDto(login, model.getNewPassword()));
             resp.getWriter().write(gson.toJson(responseDto));
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new SetNewPasswordException(e);
         }
     }
 

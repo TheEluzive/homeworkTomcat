@@ -29,7 +29,9 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var token = (String) authentication.getPrincipal();
         isTokenAlive(token);
         Collection<String> roles = repository.getRoles(token);
+
         final var newToken = refreshToken(token);
+        
 
         return repository.findByToken(newToken)
                 // TODO: add user roles

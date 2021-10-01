@@ -69,8 +69,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             final var cardId = parseLongRequest(req, "cardId");
             service.isLegalAccess(cardId, req);
             final var result = service.blockById(cardId);
-            if (result < 1)
-                throw new RuntimeException();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +84,7 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
             if (requestDto.getValue() < 0)
                 throw new RuntimeException();
 
-            service.isLegalTransaction(requestDto.getFromCardId(), req);
+            service.isLegalTransaction(requestDto.getFromCardNumber(), req);
             final var data = service.transaction(requestDto);
             //return updated card from that was transaction
             resp.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON);

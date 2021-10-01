@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class TransactionDto {
-    private long fromCardId;
-    private long toCardId;
+    private String fromCardNumber;
+    private String toCardNumber;
     private long value;
 }

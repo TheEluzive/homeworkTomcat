@@ -3,6 +3,8 @@ package org.example.app.repository;
 import lombok.RequiredArgsConstructor;
 import org.example.app.domain.Card;
 import org.example.app.dto.TransactionDto;
+import org.example.app.exception.CardNotFoundException;
+import org.example.app.exception.NotEnoughMoneyException;
 import org.example.jdbc.JdbcTemplate;
 import org.example.jdbc.RowMapper;
 
@@ -78,26 +80,34 @@ public class CardRepository {
 
         // language=PostgreSQL
         final var currentBalance = jdbcTemplate.queryOne(
-                "SELECT balance FROM cards WHERE id = ? ",
+                "SELECT balance FROM cards WHERE number = ? ",
                 rowMapper,
-                transaction.getFromCardId()
+                transaction.getFromCardNumber()
         );
 
-        if (currentBalance.orElse(0L) < transaction.getValue())
-            throw new RuntimeException("not enough money");
-
-        // language=PostgreSQL
-        jdbcTemplate.update("UPDATE cards SET balance=balance - ? WHERE id = ?; ",
-                transaction.getValue(),
-                transaction.getFromCardId()
-        );
+        if (currentBalance.orElseThrow(CardNotFoundException::new) < transaction.getValue())
+            throw new NotEnoughMoneyException();
 
         // language=PostgreSQL
-        jdbcTemplate.update("UPDATE cards SET balance=balance + ? WHERE id = ?; ",
+        jdbcTemplate.update("UPDATE cards SET balance=balance - ? WHERE number = ?; ",
                 transaction.getValue(),
-                transaction.getToCardId()
+                transaction.getFromCardNumber()
         );
-        return getById(transaction.getFromCardId());
+
+        // language=PostgreSQL
+        jdbcTemplate.update("UPDATE cards SET balance=balance + ? WHERE number = ?; ",
+                transaction.getValue(),
+                transaction.getToCardNumber()
+        );
+
+        RowMapper<Long> rowMapperId = resultSet -> resultSet.getLong("id");
+        // language=PostgreSQL
+        final var fromCardId = jdbcTemplate.queryOne(
+                "Select id from cards where number = ?",
+                rowMapperId,
+                transaction.getFromCardNumber()
+        );
+        return getById(fromCardId.orElseThrow(CardNotFoundException::new));
     }
 
 

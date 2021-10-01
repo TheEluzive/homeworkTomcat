@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.app.dto.LoginRequestDto;
-import org.example.app.dto.RecoveryPasswordResetPasswordDto;
 import org.example.app.dto.RecoveryPasswordNewPasswordDto;
+import org.example.app.dto.RecoveryPasswordResetPasswordDto;
 import org.example.app.dto.RegistrationRequestDto;
 import org.example.app.service.UserService;
 

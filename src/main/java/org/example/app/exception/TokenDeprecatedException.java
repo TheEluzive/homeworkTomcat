@@ -1,6 +1,6 @@
 package org.example.app.exception;
 
-public class TokenDeprecatedException extends RuntimeException{
+public class TokenDeprecatedException extends RuntimeException {
     public TokenDeprecatedException() {
     }
 

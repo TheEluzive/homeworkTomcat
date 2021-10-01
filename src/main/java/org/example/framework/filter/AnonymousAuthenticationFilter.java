@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.AnonymousAuthentication;
-import org.example.framework.security.Authentication;
 import org.example.framework.security.AuthenticationException;
 import org.example.framework.security.AuthenticationProvider;
 
@@ -48,7 +47,6 @@ public class AnonymousAuthenticationFilter extends HttpFilter {
 
         super.doFilter(req, res, chain);
     }
-
 
 
 }

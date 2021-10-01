@@ -1,6 +1,6 @@
 package org.example.app.exception;
 
-public class CardOwnerNotFoundException extends RuntimeException{
+public class CardOwnerNotFoundException extends RuntimeException {
     public CardOwnerNotFoundException() {
     }
 

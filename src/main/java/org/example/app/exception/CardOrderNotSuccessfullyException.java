@@ -1,6 +1,6 @@
 package org.example.app.exception;
 
-public class CardOrderNotSuccessfullyException extends RuntimeException{
+public class CardOrderNotSuccessfullyException extends RuntimeException {
     public CardOrderNotSuccessfullyException() {
     }
 

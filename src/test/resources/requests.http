@@ -34,10 +34,12 @@ client.test("Request executed successfully", function() {
 
 GET https://server.local:8443/api/cards.getAll
 X-Token: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==
+
 ###
 
 GET https://server.local:8443/api/cards.getById=1
 Authorization: Basic YWRtaW46Z29k
+
 ###
 
 POST https://server.local:8443/api/cards.order

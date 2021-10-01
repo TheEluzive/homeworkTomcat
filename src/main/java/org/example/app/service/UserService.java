@@ -9,13 +9,11 @@ import org.example.app.exception.TokenDeprecatedException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.jpa.JpaTransactionTemplate;
 import org.example.app.repository.UserRepository;
-import org.example.app.util.UserHelper;
 import org.example.framework.security.*;
 import org.example.framework.util.KeyValue;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Base64;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) {
-        if (authentication instanceof  TokenAuthentication){
+        if (authentication instanceof TokenAuthentication) {
             final var token = (String) authentication.getPrincipal();
             isTokenAlive(token);
             roles = repository.getRoles(token);
@@ -41,9 +39,9 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
                     .orElseThrow(AuthenticationException::new);
         }
 
-        if (authentication instanceof BasicAuthentication){
+        if (authentication instanceof BasicAuthentication) {
             final var username = (String) authentication.getPrincipal();
-            final var password =  (String) authentication.getCredentials();
+            final var password = (String) authentication.getCredentials();
             final var hash = passwordEncoder.encode(password);
             roles = repository.getRolesByUsername(username);
 
@@ -80,9 +78,8 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         final var hash = passwordEncoder.encode(password);
         final var token = keyGenerator.generateKey();
         final var saved = repository.save(0, username, hash).orElseThrow(RegistrationException::new);
-        final var saveBase64LogPas = "Basic " + passwordEncoder.encode(username + password);
 
-        repository.saveBase64LogPas(saveBase64LogPas);
+
         repository.saveToken(saved.getId(), token);
         return new RegistrationResponseDto(saved.getId(), saved.getUsername(), token);
     }
@@ -134,10 +131,6 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
         return newToken;
     }
 
-    public String getTokenFromBase64LogPass(String base64LogPas) {
-
-        return repository.getTokenByBase64(base64LogPas);
-    }
 
     public void isTokenAlive(String token) {
         final var time = repository.getTokenCreatedTime(token).getTime();

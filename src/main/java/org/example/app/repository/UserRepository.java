@@ -39,6 +39,7 @@ public class UserRepository {
         // language=PostgreSQL
         return jdbcTemplate.queryOne("SELECT id, username FROM users WHERE username = ?", rowMapper, username);
     }
+
     public Optional<User> getByUsernamePassword(String username, String hash) {
         // language=PostgreSQL
         return jdbcTemplate.queryOne("SELECT id, username FROM users WHERE username = ? AND password = ?", rowMapper, username, hash);
@@ -110,13 +111,13 @@ public class UserRepository {
                 token
         );
     }
+
     public List<String> getRolesByUsername(String username) {
 
         // language=PostgreSQL
         return jdbcTemplate.queryAll(
                 """
-                        SELECT r.role 
-                        from users u
+                        SELECT r.role from users u
                         JOIN user_roles ur ON ur."user" = u.id
                         JOIN roles r on ur.role = r.id
                         WHERE u.username = ?
@@ -183,30 +184,6 @@ public class UserRepository {
         );
     }
 
-
-    public void saveBase64LogPas(String base64LogPass) {
-
-        //language=PostgreSQL
-        jdbcTemplate.update("INSERT INTO base64data(base64) values (?)",
-                base64LogPass);
-    }
-
-    public String getTokenByBase64(String base64LogPass) {
-
-        //language=PostgreSQL
-        final var userId = jdbcTemplate.queryOne(
-                "SELECT id from base64data where base64 = ?",
-                rowMapperId,
-                base64LogPass
-        ).orElse(-1L);
-
-        //language=PostgreSQL
-        return jdbcTemplate.queryOne(
-                "SELECT token from tokens where \"userId\" = ?",
-                rowMapperToken,
-                userId
-        ).orElseThrow();
-    }
 
     public Timestamp getTokenCreatedTime(String token) {
 

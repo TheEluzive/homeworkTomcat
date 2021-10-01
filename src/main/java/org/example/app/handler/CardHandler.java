@@ -10,12 +10,11 @@ import org.example.app.service.CardService;
 import org.example.app.util.UserHelper;
 import org.example.framework.attribute.RequestAttributes;
 
-
 import java.io.IOException;
 import java.util.regex.Matcher;
 
-import static org.example.app.handler.HandlerHelper.*;
 import static org.example.app.handler.HandlerHelper.CONTENT_TYPE;
+import static org.example.app.handler.HandlerHelper.CONTENT_TYPE_JSON;
 
 @Log
 @RequiredArgsConstructor
@@ -97,8 +96,6 @@ public class CardHandler { // Servlet -> Controller -> Service (domain) -> domai
         }
 
     }
-
-
 
 
     public Long parseLongRequest(HttpServletRequest req, String group) {

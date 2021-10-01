@@ -40,9 +40,9 @@ public class CardService {
     }
 
     public Card order(Long ownerId) {
-            long cardId = cardRepository.order(ownerId);
-            return cardRepository.getById(cardId)
-                    .orElseThrow(CardOrderNotSuccessfullyException::new);
+        long cardId = cardRepository.order(ownerId);
+        return cardRepository.getById(cardId)
+                .orElseThrow(CardOrderNotSuccessfullyException::new);
     }
 
     public Optional<Card> transaction(TransactionDto transaction) {

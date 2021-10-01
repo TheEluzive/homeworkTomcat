@@ -12,11 +12,14 @@ import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.example.framework.filter.FilterHelper.authenticationIsRequired;
 
 public class BasicAuthenticationFilter extends HttpFilter {
     private AuthenticationProvider provider;
+
 
 
     @Override
@@ -35,18 +38,25 @@ public class BasicAuthenticationFilter extends HttpFilter {
         //пробовал в postman отправлять бейс64 запрос, там приходит "Basic 23jOJROKDFSLK$"DFS"
         //поэтому принял это как образец
 
-        final var base64LogPass = req.getHeader("Authorization");
-        if (base64LogPass == null) {
+        final var encodedUsernamePass = req.getHeader("Authorization");
+        if (encodedUsernamePass == null) {
             super.doFilter(req, res, chain);
             return;
         }
 
-        //TODO: fix basic token
-        UserService provider = (UserService) this.provider;
-        var token = provider.getTokenFromBase64LogPass(base64LogPass);
+
+
+
+        final var base64Credentials = encodedUsernamePass.substring("Basic".length()).trim();
+        final var logPassDecoded = Base64.getDecoder().decode(base64Credentials);
+        final var logPass = new String(logPassDecoded, StandardCharsets.UTF_8);
+        // logPass = username:password
+        final String[] values = logPass.split(":", 2);
+        final var principal = values[0];
+        final var credential = values[1];
 
         try {
-            final var authentication = this.provider.authenticate(new TokenAuthentication(token, null));
+            final var authentication = this.provider.authenticate(new BasicAuthentication(principal, credential));
             req.setAttribute(RequestAttributes.AUTH_ATTR, authentication);
         } catch (AuthenticationException e) {
             res.sendError(401);

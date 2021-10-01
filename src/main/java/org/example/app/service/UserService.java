@@ -8,11 +8,13 @@ import org.example.app.exception.RegistrationException;
 import org.example.app.exception.UserNotFoundException;
 import org.example.app.jpa.JpaTransactionTemplate;
 import org.example.app.repository.UserRepository;
+import org.example.app.util.UserHelper;
 import org.example.framework.security.*;
 import org.example.framework.util.KeyValue;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Base64;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -22,20 +24,34 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
     private final PasswordEncoder passwordEncoder;
     private final StringKeyGenerator keyGenerator;
     private final long tokenLifeInHours = 1L;
+    private Collection<String> roles;
 
     @Override
     public Authentication authenticate(Authentication authentication) {
-        final var token = (String) authentication.getPrincipal();
-        isTokenAlive(token);
-        Collection<String> roles = repository.getRoles(token);
+        if (authentication instanceof  TokenAuthentication){
+            final var token = (String) authentication.getPrincipal();
+            isTokenAlive(token);
+            roles = repository.getRoles(token);
 
-        final var newToken = refreshToken(token);
+            final var newToken = refreshToken(token);
 
+            return repository.findByToken(newToken)
+                    .map(o -> new TokenAuthentication(o, null, roles, true))
+                    .orElseThrow(AuthenticationException::new);
+        }
 
-        return repository.findByToken(newToken)
-                // TODO: add user roles
-                .map(o -> new TokenAuthentication(o, null, roles, true))
-                .orElseThrow(AuthenticationException::new);
+        if (authentication instanceof BasicAuthentication){
+            final var username = (String) authentication.getPrincipal();
+            final var password =  (String) authentication.getCredentials();
+            final var hash = passwordEncoder.encode(password);
+            roles = repository.getRolesByUsername(username);
+
+            return repository.getByUsernamePassword(username, hash).
+                    map(o -> new BasicAuthentication(o, null, roles, true))
+                    .orElseThrow(AuthenticationException::new);
+
+        }
+        return provide();
     }
 
     @Override

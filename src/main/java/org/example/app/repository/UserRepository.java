@@ -39,6 +39,10 @@ public class UserRepository {
         // language=PostgreSQL
         return jdbcTemplate.queryOne("SELECT id, username FROM users WHERE username = ?", rowMapper, username);
     }
+    public Optional<User> getByUsernamePassword(String username, String hash) {
+        // language=PostgreSQL
+        return jdbcTemplate.queryOne("SELECT id, username FROM users WHERE username = ? AND password = ?", rowMapper, username, hash);
+    }
 
     public Optional<UserWithPassword> getByUsernameWithPassword(EntityManager entityManager, EntityTransaction transaction, String username) {
         // em, emt - closeable
@@ -104,6 +108,22 @@ public class UserRepository {
                         """,
                 rowMapperRoles,
                 token
+        );
+    }
+    public List<String> getRolesByUsername(String username) {
+
+        // language=PostgreSQL
+        return jdbcTemplate.queryAll(
+                """
+                        SELECT r.role 
+                        from users u
+                        JOIN user_roles ur ON ur."user" = u.id
+                        JOIN roles r on ur.role = r.id
+                        WHERE u.username = ?
+                                        
+                        """,
+                rowMapperRoles,
+                username
         );
     }
 

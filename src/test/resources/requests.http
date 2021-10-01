@@ -33,12 +33,11 @@ client.test("Request executed successfully", function() {
 ###
 
 GET https://server.local:8443/api/cards.getAll
-X-Token: uB2Z2rZ4oxxXigJTocBeSvmNNmr4C+Qhxs4bhu0OEZ+QPWiV72uqf/7pylC+s2XMYFTSwpZCz6DN+UTzXURrSg==
+X-Token: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms+zDfVTLCsao9nuw==
 ###
 
 GET https://server.local:8443/api/cards.getById=1
-Authorization: 4nFSRaNoz0JdJxzPirxGlAMCde+Vzz9FxfAQ0yKqkY7f96iOiMZQBROjDlChTZc81IzNWbo3aN+9wg7X9wcHmQ==
-
+Authorization: Basic YWRtaW46Z29k
 ###
 
 POST https://server.local:8443/api/cards.order

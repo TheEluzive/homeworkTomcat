@@ -29,10 +29,10 @@ public class TokenAuthenticationFilter extends HttpFilter {
             return;
         }
 
-        final var token = req.getHeader("Authorization");
+        final var token = req.getHeader("X-Token");
 
 
-        if (token == null || token.contains("Basic ")) {//TODO maybe it is postman pattern
+        if (token == null) {//TODO maybe it is postman pattern
             super.doFilter(req, res, chain);
             return;
         }

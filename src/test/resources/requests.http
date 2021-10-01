@@ -37,7 +37,7 @@ X-Token: 6NSb+2kcdKF44ut4iBu+dm6YLu6pakWapvxHtxqaPgMr5iRhox/HlhBerAZMILPjwnRtXms
 
 ###
 
-GET https://server.local:8443/api/cards.getById=1
+GET https://server.local:8443/api/rest/cards/id/1
 Authorization: Basic YWRtaW46Z29k
 
 ###

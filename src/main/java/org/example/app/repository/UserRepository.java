@@ -178,7 +178,7 @@ public class UserRepository {
         // TODO: var timestamp = new Timestamp(System.currentTimeMillis());
         //language=PostgreSQL
         jdbcTemplate.update(
-                "update tokens set created = current_timestamp\n where token = ?",
+                "update tokens set created = current_timestamp where token = ?",
                 token
         );
     }

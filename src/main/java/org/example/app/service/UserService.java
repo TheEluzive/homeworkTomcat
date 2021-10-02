@@ -33,9 +33,9 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
             isTokenAlive(token);
             roles = repository.getRoles(token);
 
-            final var newToken = refreshToken(token);
+            refreshToken(token);
 
-            return repository.findByToken(newToken)
+            return repository.findByToken(token)
                     .map(o -> new TokenAuthentication(o, null, roles, true))
                     .orElseThrow(AuthenticationException::new);
         }
@@ -130,10 +130,8 @@ public class UserService implements AuthenticationProvider, AnonymousProvider {
 
     }
 
-    public String refreshToken(String oldToken) {
-        final var newToken = keyGenerator.generateKey();
-        repository.refreshToken(oldToken, newToken);
-        return newToken;
+    public void refreshToken(String token) {
+        repository.refreshToken(token);
     }
 
 

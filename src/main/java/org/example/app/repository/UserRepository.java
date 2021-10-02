@@ -174,13 +174,12 @@ public class UserRepository {
         );
     }
 
-    public void refreshToken(String oldToken, String newToken) {
+    public void refreshToken(String token) {
         // TODO: var timestamp = new Timestamp(System.currentTimeMillis());
         //language=PostgreSQL
         jdbcTemplate.update(
-                "UPDATE tokens SET token = ? where token = ?",
-                newToken,
-                oldToken
+                "update tokens set created = current_timestamp\n where token = ?",
+                token
         );
     }
 
